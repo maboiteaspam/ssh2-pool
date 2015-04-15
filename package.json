@@ -13,5 +13,9 @@
     "server"
   ],
   "author": "maboiteaspam",
-  "license": "WTF"
+  "license": "WTF",
+  "dependencies": {
+    "async": "^0.9.0",
+    "ssh2-utils": "1.0.0"
+  }
 }
