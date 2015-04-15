@@ -1,6 +1,6 @@
 # SSH2Pool
 
-A library to run/stream ont to multiple ssh commands across multiple machines.
+A library to run multiple ssh commands across multiple machines and get stream or output.
 It also helps to deal with file transfer across multiple hosts.
 
 # Install
