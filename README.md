@@ -45,7 +45,7 @@ var hostDone = function(server, response){
 };
 pool.env(env).runMultiple(cmds, hostDone, function(){
   if(itsFine){
-    pool.env(env).runMultiple(['echo "do something else because its fine"'], function(){
+    pool.env(env).exec('echo "do something else because its fine"', function(){
       console.log('done');
     });
   }
