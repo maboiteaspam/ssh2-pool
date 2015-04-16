@@ -16,6 +16,22 @@ ServerList.prototype.forEach = function(cb){
   });
 };
 /**
+ * Find machines
+ * exposing given service name
+ *
+ * @param name
+ * @returns {ServerList}
+ */
+ServerList.prototype.byService = function(name){
+  var server = new ServerList();
+  this.list.forEach(function(serverConfig){
+    if( name in serverConfig ){
+      server.list.push(serverConfig);
+    }
+  });
+  return server;
+};
+/**
  * Put a local path to multiple hosts.
  *
  * @param localPath
