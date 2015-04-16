@@ -1,6 +1,9 @@
 
-var utils = require("ssh2-utils");
+var SSH2Utils = require("ssh2-utils");
 var async = require('async');
+var log = require('npmlog');
+
+var ssh = new SSH2Utils();
 
 var ServerList = function(){
   this.list = [];
@@ -23,7 +26,7 @@ ServerList.prototype.putDir = function(localPath, remotePath, then){
   var putSerie = [];
   this.forEach(function(server, serverConfig){
     putSerie.push(function(done){
-      utils.putDir(serverConfig.ssh, remotePath, localPath, function(){
+      ssh.putDir(serverConfig.ssh, localPath, remotePath, function(){
         done();
       });
     });
@@ -59,13 +62,14 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
   var allSessionText = '';
   this.forEach(function(server, serverConfig){
 
-    var sCmds = cmds.indexOf?cmds:cmds(server);
+    var sCmds = cmds.indexOf?cmds:cmds(serverConfig);
 
     sshSerie.push(function(then){
 
       serverConfig.ssh.name = serverConfig.name;
 
-      utils.sshRunMultiple(serverConfig.ssh, sCmds, function(sessionText){
+      ssh.runMultiple(serverConfig.ssh, sCmds, function(sessionText){
+        allSessionText += sessionText;
         allSessionText += '\n';
         if(hostDone) hostDone(server, sessionText);
         if(then) then();
@@ -87,8 +91,8 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
  * @param hostReady
  */
 ServerList.prototype.run = function(cmd,  hostReady ){
-  this.forEach(function(server){
-    utils.run(server.ssh,cmd, hostReady);
+  this.forEach(function(server, serverConfig){
+    ssh.run(serverConfig.ssh,cmd, hostReady);
   });
 };
 
@@ -130,6 +134,7 @@ ServerList.prototype.run = function(cmd,  hostReady ){
  */
 var ServerPool = function(servers){
   this.data = servers;
+  this.log = log;
 };
 
 /**

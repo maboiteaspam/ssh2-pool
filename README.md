@@ -68,7 +68,7 @@ var localPath = '/tmp/from_local_path';
 var remotePath = '/tmp/to_remote_path';
 
 pool.env(env).forEach(function(server,serverConfig){
-    server.sftpPutDir(localPath, remotePath, function(){
+    server.exec('ls ~', function(){
       console.log('done '+serverConfig.name);
     });
 });
