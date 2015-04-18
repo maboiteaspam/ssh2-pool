@@ -12,11 +12,18 @@ It also helps to deal with file transfer across multiple hosts.
 
 ---------------------------------------
 
-
-### ServerPool API
+### API
 
 * [`ServerPool`](#ServerPool)
     * [`ServerPool.env`](#env)
+
+* [`ServerList`]()
+    * [`ServerList.exec`](#exec)
+    * [`ServerList.run`](#run)
+    * [`ServerList.putDir`](#putDir)
+    * [`ServerList.putFile`](#putFile)
+
+---------------------------------------
 
 
 <a name="ServerPool" />
@@ -77,21 +84,12 @@ __Examples__
     pool.env(':pool1'); // is also a list containing 'machine1' properties
 ```
 
-
 ---------------------------------------
-
-### ServerList API
-
-* [`ServerList`]()
-    * [`ServerList.exec`](#exec)
-    * [`ServerList.run`](#run)
-    * [`ServerList.putDir`](#putDir)
-    * [`ServerList.putFile`](#putFile)
 
 
 <a name="ServerList.exec" />
-### exec(server, cmds, onHostComplete, onDone)
-### exec(server, cmds, onDone)
+### ServerList.exec(server, cmds, onHostComplete, onDone)
+    ServerList.exec(server, cmds, onDone)
 
 Execute an Array of commands on server pool and return their output.
 
@@ -126,7 +124,7 @@ __Examples__
 
 
 <a name="ServerList.run" />
-### run(cmd, hostReady)
+### ServerList.run(cmd, hostReady)
 
 A command to execute on a server pool and return their streams.
 
@@ -164,7 +162,7 @@ __Examples__
 
 
 <a name="ServerList.putFile" />
-### putFile(localFile, remotePath, then)
+### ServerList.putFile(localFile, remotePath, then)
 
 Put local file on a remote hosts of a server pool.
 
@@ -195,7 +193,7 @@ __Examples__
 
 
 <a name="ServerList.putDir" />
-### putDir(localFile, remotePath, then)
+### ServerList.putDir(localFile, remotePath, then)
 
 Put local directory on a remote hosts of a server pool.
 
