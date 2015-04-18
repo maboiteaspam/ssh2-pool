@@ -59,10 +59,13 @@ if( process.env['TRAVIS'] ){
 
 if( !process.env['TRAVIS'] ){
 
+  var hasBooted = true;
+
   before(function(done){
     var vagrant = require('child_process').spawn('vagrant',['up'])
     vagrant.stdout.on('data', function (data) {
       console.log('stdout: ' + data);
+      if(hasBooted && data.toString().match(/already running/) ) hasBooted = false;
     });
     vagrant.stderr.on('data', function (data) {
       console.log('stderr: ' + data);
@@ -75,18 +78,22 @@ if( !process.env['TRAVIS'] ){
   });
 
   after(function(done){
-    var vagrant = require('child_process').spawn('vagrant',['halt'])
-    vagrant.stdout.on('data', function (data) {
-      console.log('stdout: ' + data);
-    });
-    vagrant.stderr.on('data', function (data) {
-      console.log('stderr: ' + data);
-    });
-    vagrant.on('close', function (code) {
-      console.log('child process exited with code ' + code);
+    if(hasBooted){
+      var vagrant = require('child_process').spawn('vagrant',['halt'])
+      vagrant.stdout.on('data', function (data) {
+        console.log('stdout: ' + data);
+      });
+      vagrant.stderr.on('data', function (data) {
+        console.log('stderr: ' + data);
+      });
+      vagrant.on('close', function (code) {
+        console.log('child process exited with code ' + code);
+        done();
+      });
+      this.timeout(50000);
+    } else {
       done();
-    });
-    this.timeout(50000);
+    }
   });
 
 }
