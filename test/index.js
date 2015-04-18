@@ -18,7 +18,7 @@ var servers =
       host: 'localhost',
       port: pwd.localhost.port || 22,
       userName: pwd.localhost.user,
-      password: pwd.localhostpwd.pwd
+      password: pwd.localhostpwd.pwd || ''
     }
   },
   'machineKey':{
@@ -26,8 +26,8 @@ var servers =
       host: 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: pwd.localhostpwd.user,
-      password: pwd.localhostpwd.pwd
-      //privateKey: pwd.localhost.privateKey?fs.readFileSync(pwd.localhost.privateKey):null
+      password: pwd.localhostpwd.pwd || '',
+      privateKey: pwd.localhost.privateKey?fs.readFileSync(pwd.localhost.privateKey):null
     }
   },
   'wrongPwd':{
@@ -35,7 +35,7 @@ var servers =
       host: 'localhost',
       port: pwd.localhost.port || 22,
       userName: 'wrong',
-      password: pwd.localhostpwd.pwd
+      password: pwd.localhostpwd.pwd || ''
     }
   },
   'wrongKey':{
@@ -43,7 +43,7 @@ var servers =
       host: 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: 'wrong',
-      password: pwd.localhostpwd.pwd
+      password: pwd.localhostpwd.pwd || ''
     }
   }
 };
@@ -126,15 +126,15 @@ describe('exec', function(){
   this.timeout(50000);
 
   it('can execute command', function(done){
-    pool.env('machinePwd').exec(['ls -alh /var/log/'], function(sessionErr, sessionText){
-      (sessionText).should.match(/root/);
+    pool.env('machinePwd').exec(['ls -alh ~'], function(sessionErr, sessionText){
+      sessionText.should.match(new RegExp(servers.machinePwd.ssh.username));
       done()
     });
   });
 
   it('can execute command with private key', function(done){
-    pool.env('machineKey').exec(['ls -alh /var/log/'], function(sessionErr, sessionText){
-      (sessionText).should.match(/root/);
+    pool.env('machineKey').exec(['ls -alh ~'], function(sessionErr, sessionText){
+      sessionText.should.match(new RegExp(servers.machinePwd.ssh.username));
       done()
     });
   });
