@@ -1,7 +1,6 @@
 
 var SSH2Utils = require("ssh2-utils");
 var async = require('async');
-var log = require('npmlog');
 
 var ssh = new SSH2Utils();
 
@@ -75,6 +74,7 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
   }
   var sshSerie = [];
   var allSessionText = '';
+  var allSessionErr = true;
   this.forEach(function(server, serverConfig){
 
     var sCmds = cmds.indexOf?cmds:cmds(serverConfig);
@@ -83,17 +83,18 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
 
       serverConfig.ssh.name = serverConfig.name;
 
-      ssh.runMultiple(serverConfig.ssh, sCmds, function(sessionText){
+      ssh.runMultiple(serverConfig.ssh, sCmds, function(err, sessionText){
         allSessionText += sessionText;
         allSessionText += '\n';
-        if(hostDone) hostDone(sessionText, server);
+        allSessionErr = err && allSessionErr;
+        if(hostDone) hostDone(err, sessionText, server);
         if(then) then();
       });
     });
   });
 
   async.parallelLimit(sshSerie, 8, function(){
-    if(done) done(allSessionText);
+    if(done) done(allSessionErr, allSessionText);
   });
 
 };
@@ -147,7 +148,7 @@ ServerList.prototype.run = function(cmd,  hostReady ){
  */
 var ServerPool = function(servers){
   this.data = servers;
-  this.log = log;
+  this.log = ssh.log;
 };
 
 /**

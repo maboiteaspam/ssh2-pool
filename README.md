@@ -97,9 +97,11 @@ __Arguments__
 
 * `cmds` - An Array of commands to execute on server pool.
 * `onHostComplete(sessionText, server)` - A callback called on command line completion. 
+    * `err` an Error.
     * `sessionText` the completed command line response including the command line.
     * `server` An ssh server credentials object.
 * `onDone(sessionText)` - A callback called on session completion. 
+    * `sessionErr` an Error.
     * `sessionText` the completed session response.
 
 __Examples__
@@ -117,7 +119,7 @@ __Examples__
     
     var pool = new SSH2Pool(servers);
     
-    pool.env(':pool1').exec(['ls','time'], function(sessionText){
+    pool.env(':pool1').exec(['ls','time'], function(sessionErr, sessionText){
         console.log(sessionText);
     });
 ```
@@ -140,13 +142,19 @@ __Arguments__
 __Examples__
 
 ```js
-    var SSH2Utils = require('ssh2-utils');
+    var SSH2Pool = require('ssh2-pool');
     
-    var server = {host: "localhost", username:"user", password:"pwd" };
+    var servers = 
+     {
+      ':pool1':['machine1'],
+      'machine1':{
+        'ssh':{host:'localhost', port:2222, userName:'vagrant',password:'vagrant'}
+      }
+     };
     
-    var ssh = new SSH2Utils();
+    var pool = new SSH2Pool(servers);
     
-    ssh.run(server, 'ls', function(err,stdout,stderr){
+    pool.env(':pool1').run('ls', function(err,stdout,stderr){
         if(err) console.log(err);
         stdout.on('data', function(){
             console.log(''+data);
@@ -176,16 +184,22 @@ __Arguments__
 __Examples__
 
 ```js
-    var SSH2Utils = require('ssh2-utils');
+    var SSH2Pool = require('ssh2-pool');
     
-    var server = {host: "localhost", username:"user", password:"pwd" };
+    var servers = 
+     {
+      ':pool1':['machine1'],
+      'machine1':{
+        'ssh':{host:'localhost', port:2222, userName:'vagrant',password:'vagrant'}
+      }
+     };
     
-    var ssh = new SSH2Utils();
+    var pool = new SSH2Pool(servers);
         
     var localFile = '/tmp/from_local_path';
     var remotePath = '/tmp/to_remote_path';
     
-    pool.env(env).putFile(localFile, remotePath, function(err){
+    pool.env(':pool1').putFile(localFile, remotePath, function(err){
         if(err) console.log(err);
         console.log('done');
     });
@@ -207,16 +221,22 @@ __Arguments__
 __Examples__
 
 ```js
-    var SSH2Utils = require('ssh2-utils');
+    var SSH2Pool = require('ssh2-pool');
     
-    var server = {host: "localhost", username:"user", password:"pwd" };
+    var servers = 
+     {
+      ':pool1':['machine1'],
+      'machine1':{
+        'ssh':{host:'localhost', port:2222, userName:'vagrant',password:'vagrant'}
+      }
+     };
     
-    var ssh = new SSH2Utils();
+    var pool = new SSH2Pool(servers);
         
     var localDirectoryPath = '/tmp/from_local_path';
     var remotePath = '/tmp/to_remote_path';
     
-    pool.env(env).putDir(localDirectoryPath, remotePath, function(err){
+    pool.env(':pool1').putDir(localDirectoryPath, remotePath, function(err){
         if(err) console.log(err);
         console.log('done');
     });

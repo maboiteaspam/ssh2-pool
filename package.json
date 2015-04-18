@@ -17,6 +17,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "npmlog": "^1.2.0",
+    "should": "^6.0.1",
     "ssh2-utils": "1.0.0"
   }
 }
