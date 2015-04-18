@@ -1,4 +1,4 @@
-# SSH2Pool
+# SSH2Pool [![Build Status](https://travis-ci.org/maboiteaspam/ssh2-pool.svg?branch=master)](https://travis-ci.org/maboiteaspam/ssh2-pool)
 
 A library to run multiple ssh commands across multiple machines and get stream or output.
 It also helps to deal with file transfer across multiple hosts.
