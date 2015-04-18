@@ -88,8 +88,8 @@ __Examples__
 
 
 <a name="ServerList.exec" />
-### ServerList.exec(server, cmds, onHostComplete, onDone)
-    ServerList.exec(server, cmds, onDone)
+### ServerList.exec(cmds, onHostComplete, onDone)
+##### ServerList.exec(cmds, onDone)
 
 Execute an Array of commands on server pool and return their output.
 
