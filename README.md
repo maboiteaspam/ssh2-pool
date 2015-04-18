@@ -97,10 +97,10 @@ __Arguments__
 
 * `cmds` - An Array of commands to execute on server pool.
 * `onHostComplete(sessionText, server)` - A callback called on command line completion. 
-    `sessionText` the completed command line response including the command line.
-    `server` An ssh server credentials object.
+    * `sessionText` the completed command line response including the command line.
+    * `server` An ssh server credentials object.
 * `onDone(sessionText)` - A callback called on session completion. 
-    `sessionText` the completed session response.
+    * `sessionText` the completed session response.
 
 __Examples__
 
@@ -132,10 +132,10 @@ __Arguments__
 
 * `cmd` - A command to execute on server pool.
 * `hostReady(err,stdout,stderr,server,conn)` - A callback called on command line sent. 
-    `err` isa Boolean.
-    `stdout` `stderr` are Streams.
-    `server` An ssh server credentials object.
-    `conn` An ssh Client object.
+    * `err` isa Boolean.
+    * `stdout` `stderr` are Streams.
+    * `server` An ssh server credentials object.
+    * `conn` An ssh Client object.
 
 __Examples__
 
@@ -171,7 +171,7 @@ __Arguments__
 * `localFile` - A local file path to read.
 * `remotePath` - A remote file path to write.
 * `then(err)` - A callback called once all files sent. 
-    `err` is an Error.
+    * `err` is an Error.
 
 __Examples__
 
@@ -202,7 +202,7 @@ __Arguments__
 * `localDirectoryPath` - A local directory path to read.
 * `remotePath` - A remote file path to write.
 * `then(err)` - A callback called once all files sent. 
-    `err` is an Error.
+    * `err` is an Error.
 
 __Examples__
 
