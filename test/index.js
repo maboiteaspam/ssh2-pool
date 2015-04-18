@@ -157,8 +157,6 @@ describe('exec', function(){
 
   it('can fail properly', function(done){
     pool.env('machinePwd').exec('ls -alh /var/log/nofile', function(sessionErr, sessionText){
-      console.log(sessionErr)
-      console.log(sessionText)
       sessionText.should.match(/No such file or directory/);
       done();
     });
@@ -166,8 +164,6 @@ describe('exec', function(){
 
   it('can fail properly', function(done){
     pool.env('machinePwd').exec('dsscdc', function(sessionErr, sessionText){
-      console.log(sessionErr)
-      console.log(sessionText)
       sessionText.should.match(/command not found/);
       done();
     });

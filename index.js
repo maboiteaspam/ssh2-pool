@@ -84,8 +84,8 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
       serverConfig.ssh.name = serverConfig.name;
 
       ssh.runMultiple(serverConfig.ssh, sCmds, function(err, sessionText){
-        allSessionText += sessionText;
-        allSessionText += '\n';
+        if(err) sessionText += err+'\n';
+        allSessionText += sessionText+'\n';
         allSessionErr = err && allSessionErr;
         if(hostDone) hostDone(err, sessionText, server);
         if(then) then();
