@@ -3,16 +3,21 @@
 A library to run multiple ssh commands across multiple machines and get stream or output.
 It also helps to deal with file transfer across multiple hosts.
 
+---------------------------------------
+
 
 # Install
 
 ```npm i ssh2-pool --save```
+
+---------------------------------------
 
 
 ### ServerPool API
 
 * [`ServerPool`](#ServerPool)
     * [`ServerPool.env`](#env)
+
 
 <a name="ServerPool" />
 ### new ServerPool(servers)
@@ -39,7 +44,6 @@ __Examples__
     var pool = new SSH2Pool(servers);
 ```
 
----------------------------------------
 
 <a name="ServerPool.env" />
 ### ServerPool.env(name)
@@ -73,6 +77,7 @@ __Examples__
     pool.env(':pool1'); // is also a list containing 'machine1' properties
 ```
 
+
 ---------------------------------------
 
 ### ServerList API
@@ -82,6 +87,7 @@ __Examples__
     * [`ServerList.run`](#run)
     * [`ServerList.putDir`](#putDir)
     * [`ServerList.putFile`](#putFile)
+
 
 <a name="ServerList.exec" />
 ### exec(server, cmds, onHostComplete, onDone)
@@ -118,7 +124,6 @@ __Examples__
     });
 ```
 
----------------------------------------
 
 <a name="ServerList.run" />
 ### run(cmd, hostReady)
@@ -157,7 +162,6 @@ __Examples__
     });
 ```
 
----------------------------------------
 
 <a name="ServerList.putFile" />
 ### putFile(localFile, remotePath, then)
@@ -189,7 +193,6 @@ __Examples__
     });
 ```
 
----------------------------------------
 
 <a name="ServerList.putDir" />
 ### putDir(localFile, remotePath, then)
@@ -222,6 +225,7 @@ __Examples__
 ```
 
 ---------------------------------------
+
 
 # Status
 
