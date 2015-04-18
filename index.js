@@ -61,7 +61,6 @@ ServerList.prototype.putDir = function(localPath, remotePath, then){
 ServerList.prototype.putFile = function(localPath, remotePath, then){
   throw 'todo';
 };
-
 /**
  * Run multiple commands on multiple hosts.
  *
@@ -87,7 +86,7 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
       ssh.runMultiple(serverConfig.ssh, sCmds, function(sessionText){
         allSessionText += sessionText;
         allSessionText += '\n';
-        if(hostDone) hostDone(server, sessionText);
+        if(hostDone) hostDone(sessionText, server);
         if(then) then();
       });
     });
@@ -98,8 +97,6 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
   });
 
 };
-
-
 /**
  * Run a command on multiple hosts and returns their streams.
  *
