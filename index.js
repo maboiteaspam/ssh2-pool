@@ -2,7 +2,10 @@
 var SSH2Utils = require("ssh2-utils");
 var async = require('async');
 var log = require('npmlog');
+var _ = require('underscore');
 var pkg = require('./package.json');
+
+log.level = process.env['NPM_LOG'] || 'info';
 
 var ssh = new SSH2Utils();
 
@@ -74,23 +77,22 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
     done = hostDone;
     hostDone = null;
   }
-  cmds = cmds instanceof Array ? cmds : [cmds];
   var sshSerie = [];
   var allSessionText = '';
   var allSessionErr = true;
   this.forEach(function(server, serverConfig){
 
-    var sCmds = cmds.indexOf?cmds:cmds(serverConfig);
+    var sCmds = cmds;
+    if(_.isFunction(sCmds) ) sCmds = sCmds(serverConfig);
+    if(_.isString(sCmds) ) sCmds = [sCmds];
 
     sshSerie.push(function(then){
 
       serverConfig.ssh.name = serverConfig.name;
 
-      log.silly(pkg.name, '%j',serverConfig.ssh);
-
       ssh.runMultiple(serverConfig.ssh, sCmds, function(err, sessionText){
         if(err) sessionText += err+'\n';
-        allSessionText += sessionText+'\n';
+        allSessionText += sessionText+'';
         allSessionErr = err && allSessionErr;
         if(hostDone) hostDone(err, sessionText, server);
         if(then) then();
@@ -111,7 +113,9 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
  */
 ServerList.prototype.run = function(cmd,  hostReady ){
   this.forEach(function(server, serverConfig){
-    ssh.run(serverConfig.ssh,cmd, hostReady);
+    var sCmd = cmd;
+    if(_.isFunction(sCmd) ) sCmd = sCmd(serverConfig);
+    ssh.run(serverConfig.ssh, sCmd, hostReady);
   });
 };
 
