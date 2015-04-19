@@ -16,10 +16,12 @@
   "license": "WTF",
   "dependencies": {
     "async": "^0.9.0",
-    "ssh2-utils": "1.0.x"
+    "npmlog": "^1.2.0",
+    "ssh2-utils": "1.0.x",
+    "underscore.string": "^3.0.3"
   },
   "devDependencies": {
-    "npmlog": "^1.2.0",
+    "node-vagrant-bin": "^1.0.0",
     "should": "^6.0.1"
   }
 }
