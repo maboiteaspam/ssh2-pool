@@ -1,6 +1,6 @@
 {
   "name": "ssh2-pool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SSH2 server pool helper",
   "main": "index.js",
   "scripts": {
