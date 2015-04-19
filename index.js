@@ -1,6 +1,7 @@
 
 var SSH2Utils = require("ssh2-utils");
 var async = require('async');
+var log = require('npmlog');
 
 var ssh = new SSH2Utils();
 
@@ -72,6 +73,7 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
     done = hostDone;
     hostDone = null;
   }
+  cmds = cmds instanceof Array ? cmds : [cmds];
   var sshSerie = [];
   var allSessionText = '';
   var allSessionErr = true;
@@ -82,6 +84,8 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
     sshSerie.push(function(then){
 
       serverConfig.ssh.name = serverConfig.name;
+
+      log.silly('%j',serverConfig.ssh)
 
       ssh.runMultiple(serverConfig.ssh, sCmds, function(err, sessionText){
         if(err) sessionText += err+'\n';
@@ -148,7 +152,6 @@ ServerList.prototype.run = function(cmd,  hostReady ){
  */
 var ServerPool = function(servers){
   this.data = servers;
-  this.log = ssh.log;
 };
 
 /**
