@@ -1,6 +1,7 @@
 
 require('should');
 var fs = require('fs');
+var log = require('npmlog');
 var spawn = require('child_process').spawn;
 
 var pwd = {};
@@ -11,6 +12,9 @@ else
 
 var SSH2Pool = require('../index.js');
 
+
+log.level = 'silly';
+
 var servers =
 {
   ':pool1':['machine1'],
@@ -19,7 +23,8 @@ var servers =
       host: pwd.localhost.host || 'localhost',
       port: pwd.localhost.port || 22,
       userName: pwd.localhost.user,
-      password: pwd.localhostpwd.pwd || ''
+      password: pwd.localhost.pwd || undefined,
+      privateKey: pwd.localhost.privateKey?fs.readFileSync(pwd.localhost.privateKey):undefined
     }
   },
   'machineKey':{
@@ -27,8 +32,8 @@ var servers =
       host: pwd.localhostpwd.host || 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: pwd.localhostpwd.user,
-      password: pwd.localhostpwd.pwd || '',
-      privateKey: pwd.localhost.privateKey?fs.readFileSync(pwd.localhost.privateKey):null
+      password: pwd.localhostpwd.pwd || undefined,
+      privateKey: pwd.localhostpwd.privateKey?fs.readFileSync(pwd.localhostpwd.privateKey):undefined
     }
   },
   'wrongPwd':{
@@ -36,7 +41,8 @@ var servers =
       host: pwd.localhost.host || 'localhost',
       port: pwd.localhost.port || 22,
       userName: 'wrong',
-      password: pwd.localhostpwd.pwd || ''
+      password: pwd.localhost.pwd || undefined,
+      privateKey: pwd.localhost.privateKey?fs.readFileSync(pwd.localhost.privateKey):undefined
     }
   },
   'wrongKey':{
@@ -44,19 +50,18 @@ var servers =
       host: pwd.localhostpwd.host || 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: 'wrong',
-      password: pwd.localhostpwd.pwd || ''
+      password: pwd.localhostpwd.pwd || undefined,
+      privateKey: pwd.localhostpwd.privateKey?fs.readFileSync(pwd.localhostpwd.privateKey):undefined
     }
   }
 };
 
 var pool = new SSH2Pool(servers);
-pool.log.level = 'silly';
 
 var machine = 'machinePwd';
 if( process.env['TRAVIS'] ){
   machine = 'machineKey';
 }
-var log = require('npmlog');
 
 
 if( !process.env['TRAVIS'] ){
@@ -243,14 +248,14 @@ describe('exec', function(){
 
   it('can fail properly', function(done){
     pool.env('machinePwd').exec('ls -alh /var/log/nofile', function(sessionErr, sessionText){
-      sessionText.should.match(/No such file or directory/);
+      sessionText.should.match(/(No such file or directory|Aucun fichier ou dossier de ce type)/);
       done();
     });
   });
 
   it('can fail properly', function(done){
-    pool.env('machinePwd').exec('dsscdc', function(sessionErr, sessionText){
-      sessionText.should.match(/command not found/);
+    pool.env('machinePwd').exec(['dsscdc'], function(sessionErr, sessionText){
+      sessionText.should.match(/(command not found|commande inconnue)/);
       done();
     });
   });
