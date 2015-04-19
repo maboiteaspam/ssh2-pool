@@ -9,8 +9,9 @@ log.level = process.env['NPM_LOG'] || 'info';
 
 var ssh = new SSH2Utils();
 
-var ServerList = function(){
-  this.list = [];
+var ServerList = function(servers){
+  this.list = servers;
+  this.length = servers.length;
 };
 
 /**
@@ -31,8 +32,7 @@ ServerList.prototype.toJson = function(){
  */
 ServerList.prototype.forEach = function(cb){
   this.list.forEach(function(serverConfig){
-    var server = new ServerList();
-    server.list.push(serverConfig);
+    var server = new ServerList(serverConfig);
     cb(server, serverConfig);
   });
 };
@@ -45,13 +45,13 @@ ServerList.prototype.forEach = function(cb){
  * @returns {ServerList}
  */
 ServerList.prototype.byService = function(name){
-  var server = new ServerList();
+  var servers = [];
   this.list.forEach(function(serverConfig){
     if( name in serverConfig ){
-      server.list.push(serverConfig);
+      servers.push(serverConfig);
     }
   });
-  return server;
+  return new ServerList(servers);
 };
 /**
  * Put a local path to multiple hosts.
@@ -188,30 +188,30 @@ var ServerPool = function(servers){
  * @returns {ServerList}
  */
 ServerPool.prototype.env = function(name){
-  var servers = new ServerList();
   var data = this.data;
+  var servers = [];
   if( (!!name.match(/^:/)) ){
     if( name == ':all' ){
       data.forEach(function(name){
         if(!name.match(/^[:]/)){
           data[name].name = name;
-          servers.list.push(data[name]);
+          servers.push(data[name]);
         }
       });
     }
     if( data[name] ){
       data[name].forEach(function(name){
         data[name].name = name;
-        servers.list.push(data[name]);
+        servers.push(data[name]);
       });
     }
   }else if(data[name]){
     data[name].name = name;
-    servers.list.push(data[name])
+    servers.push(data[name])
   } else {
     throw 'env is undefined : ' + name;
   }
-  return servers;
+  return new ServerList(servers);
 };
 
 module.exports = ServerPool;
