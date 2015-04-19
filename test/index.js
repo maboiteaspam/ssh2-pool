@@ -1,7 +1,6 @@
 
 require('should');
 var fs = require('fs');
-var log = require('npmlog');
 var spawn = require('child_process').spawn;
 
 var pwd = {};
@@ -11,9 +10,10 @@ else
   pwd = require('./vagrant-ssh.json');
 
 var SSH2Pool = require('../index.js');
+var Vagrant = require('node-vagrant-bin');
+var log = require('npmlog');
 
-
-log.level = 'silly';
+log.level = 'verbose';
 
 var servers =
 {
@@ -61,97 +61,11 @@ var pool = new SSH2Pool(servers);
 var machine = 'machinePwd';
 if( process.env['TRAVIS'] ){
   machine = 'machineKey';
+  log.level = 'silly';
 }
 
 
 if( !process.env['TRAVIS'] ){
-  var Vagrant = (function(){
-    function Vagrant(opts){
-      this.options = opts || {};
-    }
-    var spawnVagrant = function(args){
-      var vagrant = spawn('vagrant',args);
-      log.verbose('vagrant', 'vagrant '+args.join(' '))
-      var stdout = '';
-      var stderr = '';
-      vagrant.stdout.on('data', function (data) {
-        log.silly('vagrant', '%s', data);
-        stdout+=''+data;
-      });
-      vagrant.stderr.on('data', function (data) {
-        log.error('vagrant', '%s', data);
-        stderr+=''+data;
-      });
-      vagrant.on('close', function (code) {
-        log.error('vagrant', 'close code %s', code);
-        vagrant.emit('done', code, stdout, stderr);
-      });
-      return vagrant;
-    };
-    Vagrant.prototype.up = function(machine, done){
-      var provider = this.options.provider || 'virtualbox';
-      var vagrant = spawnVagrant(['up', machine, '--provider='+provider]);
-      var booted = null;
-      vagrant.on('data',function(data){
-        data += '';
-        if(data.match(/Machine booted and ready!/)){
-          booted = true;
-        }
-        if(data.match(/is already running.$/)){
-          booted = false;
-        }
-      });
-      vagrant.on('done',function(code, stdout, stderr){
-        if(done) done(stderr,booted);
-      });
-      return vagrant;
-    };
-    Vagrant.prototype.halt = function(done){
-      var vagrant = spawnVagrant(['halt']);
-      vagrant.on('done',function(code, stdout, stderr){
-        //if(data.match(reg) ){
-        //}
-        if(done) done(false);
-      });
-      return vagrant;
-    };
-    Vagrant.prototype.status = function(done){
-      var machines = {};
-      var reg = /([a-z0-9-_]+)\s+(running|poweroff)\s+[(](virtualbox|libvirt)[)]/i;
-      var vagrant = spawnVagrant(['status']);
-      vagrant.stdout.on('data', function (data) {
-        data += '';
-        data.split('\n').forEach(function(line){
-          var regRes = line.match(reg);
-          if(regRes ){
-            var name = regRes[1];
-            machines[name] = {
-              status:regRes[2],
-              provider:regRes[3]
-            };
-          }
-        })
-      });
-      vagrant.on('done',function(code, stdout, stderr){
-        if(done) done(stderr,machines);
-      });
-      return vagrant;
-    };
-    Vagrant.prototype.isRunning = function(done){
-      this.status(function(errors,machines){
-        var running = false;
-        Object.keys(machines).forEach(function(name){
-          if(machines[name].status == 'running' ){
-            running = name;
-          }
-        });
-        if(done)done(running);
-      });
-      return vagrant;
-    };
-    return Vagrant;
-  })();
-
   var vagrant = new Vagrant();
 
   var hasBooted = true;
