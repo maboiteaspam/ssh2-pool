@@ -12,6 +12,23 @@ var ssh = new SSH2Utils();
 var ServerList = function(){
   this.list = [];
 };
+
+/**
+ *
+ * @returns {{}}
+ */
+ServerList.prototype.toJson = function(){
+  var ret = {};
+  this.list.forEach(function(serverConfig){
+    ret[serverConfig.name] = serverConfig;
+  });
+  return ret;
+};
+
+/**
+ *
+ * @param cb
+ */
 ServerList.prototype.forEach = function(cb){
   this.list.forEach(function(serverConfig){
     var server = new ServerList();
@@ -19,6 +36,7 @@ ServerList.prototype.forEach = function(cb){
     cb(server, serverConfig);
   });
 };
+
 /**
  * Find machines
  * exposing given service name
@@ -173,6 +191,14 @@ ServerPool.prototype.env = function(name){
   var servers = new ServerList();
   var data = this.data;
   if( (!!name.match(/^:/)) ){
+    if( name == ':all' ){
+      data.forEach(function(name){
+        if(!name.match(/^[:]/)){
+          data[name].name = name;
+          servers.list.push(data[name]);
+        }
+      });
+    }
     if( data[name] ){
       data[name].forEach(function(name){
         data[name].name = name;
