@@ -16,7 +16,7 @@ var servers =
   ':pool1':['machine1'],
   'machinePwd':{
     'ssh':{
-      host: 'localhost',
+      host: pwd.localhost.host || 'localhost',
       port: pwd.localhost.port || 22,
       userName: pwd.localhost.user,
       password: pwd.localhostpwd.pwd || ''
@@ -24,7 +24,7 @@ var servers =
   },
   'machineKey':{
     'ssh':{
-      host: 'localhost',
+      host: pwd.localhostpwd.host || 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: pwd.localhostpwd.user,
       password: pwd.localhostpwd.pwd || '',
@@ -33,7 +33,7 @@ var servers =
   },
   'wrongPwd':{
     'ssh':{
-      host: 'localhost',
+      host: pwd.localhost.host || 'localhost',
       port: pwd.localhost.port || 22,
       userName: 'wrong',
       password: pwd.localhostpwd.pwd || ''
@@ -41,7 +41,7 @@ var servers =
   },
   'wrongKey':{
     'ssh':{
-      host: 'localhost',
+      host: pwd.localhostpwd.host || 'localhost',
       port: pwd.localhostpwd.port || 22,
       userName: 'wrong',
       password: pwd.localhostpwd.pwd || ''
