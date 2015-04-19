@@ -2,6 +2,7 @@
 var SSH2Utils = require("ssh2-utils");
 var async = require('async');
 var log = require('npmlog');
+var pkg = require('./package.json');
 
 var ssh = new SSH2Utils();
 
@@ -85,7 +86,7 @@ ServerList.prototype.exec = function(cmds,  hostDone, done){
 
       serverConfig.ssh.name = serverConfig.name;
 
-      log.silly('%j',serverConfig.ssh)
+      log.silly(pkg.name, '%j',serverConfig.ssh);
 
       ssh.runMultiple(serverConfig.ssh, sCmds, function(err, sessionText){
         if(err) sessionText += err+'\n';
