@@ -1,7 +1,6 @@
 
 require('should');
 var fs = require('fs');
-var spawn = require('child_process').spawn;
 
 var pwd = {};
 if( process.env['TRAVIS'] )
