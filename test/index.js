@@ -1,4 +1,10 @@
 
+process.env['NPM_LOG'] = process.env['NPM_LOG']
+|| 'silly'
+|| 'info'
+|| 'verbose'
+;
+
 require('should');
 var fs = require('fs');
 
@@ -11,8 +17,6 @@ else
 var SSH2Pool = require('../index.js');
 var Vagrant = require('node-vagrant-bin');
 var log = require('npmlog');
-
-log.level = 'verbose';
 
 var servers =
 {
@@ -220,12 +224,12 @@ describe('run', function(){
       stderrs.on('data', function(data){
         stderr+=''+data;
       });
-      setTimeout(function(){
-        stderr.should.match(/No such file or directory/);
-        stdout.should.be.empty;
+      stdouts.on('close', function(){
+        stdout.should.match(/No such file or directory/);
+        stderr.should.be.empty;
         conn.end();
         done();
-      },1000);
+      });
       (err).should.be.false;
     });
   });
@@ -239,12 +243,12 @@ describe('run', function(){
       stderrs.on('data', function(data){
         stderr+=''+data;
       });
-      setTimeout(function(){
-        stderr.should.match(/command not found/)
-        stdout.should.be.empty;
+      stdouts.on('close', function(){
+        stdout.should.match(/command not found/)
+        stderr.should.be.empty;
         conn.end();
         done();
-      },1000);
+      });
       (err).should.be.false;
     });
   });
